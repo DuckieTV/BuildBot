@@ -92,6 +92,6 @@ Usage :
 30 3 * * * /path/to/push-xem.sh
 25 3 * * * /path/to/update-repo.sh
 30 3 * * * /path/to/build-android.sh
-1 4 * * * /pat/to/deploy-nightly.sh
+1 4 * * * /path/to/deploy-nightly.sh
 ```
 - Configure .credentials variables template
