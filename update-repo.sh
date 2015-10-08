@@ -1,3 +1,12 @@
+#!/bin/bash
+export PATH="${PATH}:/usr/local/bin/:/usr/bin"
+rm -rf /var/www/deploy/standalone
+rm -rf /var/www/deploy/newtab
+rm -rf /var/www/deploy/browseraction
+rm -rf /var/www/deploy/cordova
+rm -rf /var/www/deploy/osx
+rm -rf /var/www/deploy/binaries/*.*
+rm -rf /var/www/deploy/TMP
 cd /var/www/Nightlies
 echo "nixing changes"
 git reset --hard
@@ -10,7 +19,7 @@ echo "Executing GULP"
 gulp nightly
 echo "Committing changes"
 git add .
-git commit -m "Auto-Build: {$DTREV}"
+git commit -m "Auto-Build: ${DTREV}"
 echo "Pushing"
 git push origin master -f
 rm -rf /var/www/deploy/TMP/
