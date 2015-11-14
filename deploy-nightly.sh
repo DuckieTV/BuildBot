@@ -5,18 +5,21 @@ source "${PWD}/.credentials"
 DT=$(date +"%m%d%Y")
 DTREV=$(date +"%Y%m%d")
 cd /var/www/Nightlies/
-LASTTAG=`git describe --tags $(git rev-list --tags --max-count=1)`
-LOG=`git log "${LASTTAG}"..HEAD --oneline|awk 1 ORS='\\\n'`
-echo "LOG: ${LOG}"
+LASTTAG=` curl https://github.com/DuckieTV/Nightlies/releases/ --silent | grep Auto-Build -n2 | tail -n 1 |grep -E "[0-9a-f]{32,}" -o -m 1`
+LOG=`git log "${LASTTAG}"..HEAD --oneline|awk 1 ORS='\\\n - '`
+LOG=${LOG//$'\n'/}
+LOG="$(echo "${LOG}"|tr -d '"')"
+LOG=${LOG%$' - '}
+echo "LOG: ${LOG}, LAST TAG: ${LASTTAG}"
 cd /var/www/Nightlies/build/
 DAT=$(date +"%m-%d-%Y")
 PRETTYDATE=$(date +"%B %d, %Y")
-API=`printf '{"tag_name": "nightly-%s","target_commitish": "master","name": "Nightly release for %s","body": "DuckieTV nightly release for %s. Changelog:%s","draft": false, "prerelease": true}' "$DT" "$DAT" "$PRETTYDATE" "$LOG"`
+API=`printf '{"tag_name": "nightly-%s","target_commitish": "master","name": "Nightly release for %s","body": "DuckieTV nightly release for %s.\\\n**Changelog:**\\\n - %s","draft": false, "prerelease": true}' "$DT" "$DAT" "$PRETTYDATE" "$LOG"`
 echo "${API}"
 #create new release
 rm lastest_release.json
 echo "Pushing new release"
-curl https://api.github.com/repos/DuckieTV/Nightlies/releases?access_token=$GITHUB_API_KEY --data "$API" -o latest_release.json
+curl https://api.github.com/repos/DuckieTV/Nightlies/releases?access_token=$GITHUB_API_KEY --data "$API" -o "/root/latest_release.json"
 
 ID=$(jq ".id" ./latest_release.json)
 
