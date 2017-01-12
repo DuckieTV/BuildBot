@@ -1,5 +1,6 @@
 #!/bin/bash
 export PATH="${PATH}:/usr/local/bin/:/usr/bin"
+export DISPLAY=:1
 rm -rf /var/www/deploy/standalone
 rm -rf /var/www/deploy/newtab
 rm -rf /var/www/deploy/browseraction
